@@ -17,8 +17,7 @@ public class CsvFilePreLoadChecker {
     public String toCsvLine(String body) throws CsvRecordException
     {
         //Todo convert a csvline by the defined metadata
-
-        if(body.contains("sz300432")) throw  new CsvRecordException("sz300432 will be ignored");
+        //if(body.contains("sz300432")) throw  new CsvRecordException("sz300432 will be ignored");
         return body;
     }
 }

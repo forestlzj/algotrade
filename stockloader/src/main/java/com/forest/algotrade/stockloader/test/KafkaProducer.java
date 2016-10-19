@@ -1,4 +1,4 @@
-package com.forest.algotrade.stockloader.router;
+package com.forest.algotrade.stockloader.test;
 
 
 import org.apache.camel.Exchange;

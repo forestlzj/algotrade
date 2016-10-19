@@ -14,19 +14,30 @@ import java.io.IOException;
 public class CsvParallelLoader extends RouteBuilder {
     @Override
     public void configure() throws Exception {
+
+        //todo retry will cause duplicate data, need to de-dup in backend
+
         //  default error(uncaught exception) handler which is context scoped
         errorHandler(defaultErrorHandler()
                 .maximumRedeliveries(2)
                 .redeliveryDelay(5000)
-                .retryAttemptedLogLevel(LoggingLevel.WARN).log("error handled"));
+                .retryAttemptedLogLevel(LoggingLevel.WARN));
 
         // exception handler for specific exceptions
-        onException(IOException.class).maximumRedeliveries(3).redeliveryDelay(5000);
-        onException(Exception.class).maximumRedeliveries(1).redeliveryDelay(10000);
-        //only the failed record send to kafka and write to error folder
-        onException(CsvRecordException.class).to("kafka:localhost:9092?topic=test-deadleter").to("file:C:/_nCWD_/app/data/error") ;
+        onException(IOException.class).maximumRedeliveries(1).redeliveryDelay(5000);
+        //onException(Exception.class).maximumRedeliveries(1).redeliveryDelay(10000);
 
-        from("file:C:/_nCWD_/app/data/input?noop=true?delay=3000")
+        //only the failed record send to kafka and write to error folder
+        onException(CsvRecordException.class)
+                .to("kafka:localhost:9092?topic=test-dlc")
+                .to("file:/app/dev/dataland/error");
+
+        onCompletion()
+                .log("global thread: ${threadName}")
+                .to("file:/app/dev/dataland/archive");
+
+        from("file:/app/dev/dataland/input?noop=true?delay=3000")
+                //.onCompletion().to("file:/app/dev/dataland/archive").end()
                 .log("start to process file: ${header.CamelFileName}")
                 .bean(CsvFilePreLoadChecker.class, "validateMetaData")
                 .split(body().tokenize("\n")).streaming().parallelProcessing()
@@ -40,9 +51,7 @@ public class CsvParallelLoader extends RouteBuilder {
                       })
                .to("kafka:localhost:9092?topic=test")
                 .end()
-                .log("Done processing file: ${header.CamelFileName}")
-                .to("file:C:/_nCWD_/app/data/archive")   // <-- only run if success.  also need to do this when CsvRecordException
-                .log("Done archiving file: ${header.CamelFileName}");
+                .log("Done processing file: ${header.CamelFileName}");
 
     }
 }
