@@ -37,7 +37,7 @@ public class CsvParallelLoader extends RouteBuilder {
                 .to("file:/app/dev/dataland/archive");
 
         from("file:/app/dev/dataland/input?noop=true?delay=3000")
-                //.onCompletion().to("file:/app/dev/dataland/archive").end()
+                .startupOrder(1)
                 .log("start to process file: ${header.CamelFileName}")
                 .bean(CsvFilePreLoadChecker.class, "validateMetaData")
                 .split(body().tokenize("\n")).streaming().parallelProcessing()
@@ -53,5 +53,10 @@ public class CsvParallelLoader extends RouteBuilder {
                 .end()
                 .log("Done processing file: ${header.CamelFileName}");
 
+        // archive files after done processing
+         from("file:/app/dev/dataland/input?delay=5000")
+                .startupOrder(100)
+                .to("file:/app/dev/dataland/archive")
+                .log("Done archiving file: ${header.CamelFileName}");
     }
 }
