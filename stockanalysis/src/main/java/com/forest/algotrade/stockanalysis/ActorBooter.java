@@ -9,8 +9,7 @@ import test.http.HttpTransformer;
 
 public class ActorBooter {
   public static void main(String[] args) {
-    ActorSystem system = ActorSystem.create("some-system");
-
-    final ActorRef ActorBooter = system.actorOf(Props.create(StockPECalcRouter.class));
+     ActorSystem system = ActorSystem.create("stockanalysis-system");
+     system.actorOf(Props.create(StockPECalcRouter.class));
   }
 }
