@@ -54,6 +54,7 @@
     <eclipse-jetty-version>9.2.19.v20160908</eclipse-jetty-version>
     <bundle-plugin-version>2.3.7</bundle-plugin-version>
     <scala-version>2.10.4</scala-version>
+    <phantom-version>1.22.0</phantom-version>   <!-- 1.29.5-->
     <scala-plugin-version>3.1.6</scala-plugin-version>
     <!-- use utf-8 encoding -->
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -316,6 +317,19 @@
       <version>${camel-version}</version>
       </dependency>
 
+
+      <dependency>
+        <groupId>org.apache.camel</groupId>
+        <artifactId>camel-twitter</artifactId>
+        <version>${camel-version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.camel</groupId>
+        <artifactId>camel-websocket</artifactId>
+        <version>${camel-version}</version>
+      </dependency>
+
+
       <!-- Akka -->
       <dependency>
         <groupId>com.typesafe.akka</groupId>
@@ -487,6 +501,34 @@
         <groupId>org.springframework</groupId>
         <artifactId>spring-expression</artifactId>
         <version>${spring-version}</version>
+      </dependency>
+
+      <!-- Cassandra drive for scala -->
+      <dependency>
+        <groupId>com.websudos</groupId>
+        <artifactId>phantom-dsl_2.11</artifactId>
+        <version>${phantom-version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.websudos</groupId>
+        <artifactId>phantom-reactivestreams_2.11</artifactId>
+        <version>${phantom-version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.websudos</groupId>
+        <artifactId>util-testing_2.11</artifactId>
+        <version>0.13.0</version>  <!--0.17.0 -->
+      </dependency>
+      <dependency>
+        <groupId>com.websudos</groupId>
+        <artifactId>phantom-connectors_2.11</artifactId>
+        <version>${phantom-version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.scalatest</groupId>
+        <artifactId>scalatest_2.11</artifactId>
+        <version>3.0.0</version>
       </dependency>
 
     </dependencies>
